@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Database Schema</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --surface:#fff; --surface-2:#f0f2f5;
+    --text:#14161a; --muted:#5c6470; --border:#dfe3e8; --accent:#1f6feb;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0f1115; --surface:#171a21; --surface-2:#1e222b;
+      --text:#e6e9ef; --muted:#9aa3b2; --border:#2a2f3a; --accent:#6aa3ff;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1115; --surface:#171a21; --surface-2:#1e222b;
+    --text:#e6e9ef; --muted:#9aa3b2; --border:#2a2f3a; --accent:#6aa3ff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--bg);color:var(--text);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding:40px 16px 60px}
+  h1{font-size:24px;margin:0 0 28px;letter-spacing:-.02em}
+  h2{font-size:18px;margin:36px 0 12px}
+  code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin:0 0 18px;overflow:hidden}
+  .card-head{
+    display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;
+    padding:12px 16px;background:var(--surface-2);border-bottom:1px solid var(--border);
+  }
+  .card-head .name{font:600 15px ui-monospace,Menlo,Consolas,monospace;color:var(--accent)}
+  .card-head .what{color:var(--muted);font-size:14px}
+  .scroll{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:14px}
+  th{
+    text-align:left;font-size:12px;font-weight:600;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.04em;
+    padding:9px 16px;border-bottom:1px solid var(--border);white-space:nowrap;
+  }
+  td{padding:9px 16px;border-bottom:1px solid var(--border);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td.col{white-space:nowrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:600}
+  td.type{white-space:nowrap;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+  ul{margin:0;padding-left:22px}
+  li{margin:5px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Database Schema</h1>
+
+<div class="card">
+  <div class="card-head"><span class="name">invoices</span><span class="what">— invoices issued to a customer</span></div>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td class="col">id</td><td class="type">bigint, PK</td><td>Invoice identifier.</td></tr>
+      <tr><td class="col">customer_id</td><td class="type">bigint, FK</td><td>Customer the invoice was issued to.</td></tr>
+      <tr><td class="col">invoice_number</td><td class="type">text</td><td>Invoice number, e.g. <code>INV-1001</code>.</td></tr>
+      <tr><td class="col">invoice_date</td><td class="type">date</td><td>Date the invoice was issued.</td></tr>
+      <tr><td class="col">amount</td><td class="type">numeric</td><td>Invoice amount.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><span class="name">payments</span><span class="what">— payments received from a customer</span></div>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td class="col">id</td><td class="type">bigint, PK</td><td>Payment identifier.</td></tr>
+      <tr><td class="col">customer_id</td><td class="type">bigint, FK</td><td>Customer the payment was received from.</td></tr>
+      <tr><td class="col">payment_date</td><td class="type">date</td><td>Date the payment was received.</td></tr>
+      <tr><td class="col">amount</td><td class="type">numeric</td><td>Total payment amount.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><span class="name">payment_allocations</span><span class="what">— allocation of payments to invoices</span></div>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td class="col">id</td><td class="type">bigint, PK</td><td>Allocation row identifier.</td></tr>
+      <tr><td class="col">payment_id</td><td class="type">bigint, FK</td><td>Payment the money comes from → <code>payments.id</code>.</td></tr>
+      <tr><td class="col">invoice_id</td><td class="type">bigint, FK</td><td>Invoice the money is applied to → <code>invoices.id</code>.</td></tr>
+      <tr><td class="col">amount</td><td class="type">numeric</td><td>Amount applied to that invoice.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><span class="name">deductions</span><span class="what">— deductions taken against invoices</span></div>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td class="col">id</td><td class="type">bigint, PK</td><td>Deduction identifier.</td></tr>
+      <tr><td class="col">invoice_id</td><td class="type">bigint, FK</td><td>Invoice the deduction was taken against → <code>invoices.id</code>.</td></tr>
+      <tr><td class="col">reason_code</td><td class="type">text</td><td>Deduction reason code.</td></tr>
+      <tr><td class="col">amount</td><td class="type">numeric</td><td>Deduction amount.</td></tr>
+      <tr><td class="col">created_at</td><td class="type">timestamp</td><td>Date and time the record was created.</td></tr>
+      <tr><td class="col">status</td><td class="type">text</td><td>Deduction status.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<h2>Relationships</h2>
+<ul>
+  <li><code>invoices.id</code> → <code>payment_allocations.invoice_id</code> — 1 : N</li>
+  <li><code>payments.id</code> → <code>payment_allocations.payment_id</code> — 1 : N</li>
+  <li><code>invoices.id</code> → <code>deductions.invoice_id</code> — 1 : N</li>
+</ul>
+
+</div>
+</body>
+</html>
