@@ -87,7 +87,7 @@
 </div>
 
 <div class="card">
-  <div class="card-head"><span class="name">payment_allocations</span><span class="what">— allocation of payments to invoices</span></div>
+  <div class="card-head"><span class="name">invoice_payments</span><span class="what">— allocation of payments to invoices</span></div>
   <div class="scroll">
   <table>
     <thead><tr><th>Column</th><th>Type</th><th>Description</th></tr></thead>
@@ -120,8 +120,8 @@
 
 <h2>Relationships</h2>
 <ul>
-  <li><code>invoices.id</code> → <code>payment_allocations.invoice_id</code> — 1 : N</li>
-  <li><code>payments.id</code> → <code>payment_allocations.payment_id</code> — 1 : N</li>
+  <li><code>invoices.id</code> → <code>invoice_payments.invoice_id</code> — 1 : N</li>
+  <li><code>payments.id</code> → <code>invoice_payments.payment_id</code> — 1 : N</li>
   <li><code>invoices.id</code> → <code>deductions.invoice_id</code> — 1 : N</li>
 </ul>
 
